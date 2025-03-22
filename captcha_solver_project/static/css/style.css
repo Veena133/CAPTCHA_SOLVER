@@ -1,0 +1,29 @@
+body {
+    font-family: Arial, sans-serif;
+    background-image: url("\static\images\b2.webp"); /* Update the path based on your project structure */
+    background-size: cover; /* Ensures the image covers the entire background */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
+    background-position: center; /* Centers the image */
+    text-align: center;
+    padding-top: 50px;
+}
+
+
+/* .container {
+    width: 80%;
+    margin: 0 auto;
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(244, 243, 243, 0.1);
+} */
+
+input[type="file"], input[type="text"] {
+    margin: 20px 0;
+}
+
+.result {
+    margin-top: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}

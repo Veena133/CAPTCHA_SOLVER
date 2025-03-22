@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Captcha Solver</title>
+    <style>
+      body {
+        background: url('static/images/b3.webp') no-repeat center center fixed;
+        background-size: cover;
+        color: #ffffff;
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+      }
+
+      h1 {
+        font-size: 3em;
+        margin-bottom: 10px;
+        color: black;
+        text-shadow: 2px 2px 10px rgba(243, 12, 12, 0.7);
+      }
+
+      p {
+        font-size: 1.5em;
+        margin-bottom: 20px;
+        color: black;
+        text-shadow: 2px 2px 10px rgba(238, 167, 167, 0.7);
+      }
+
+      input[type="file"] {
+        padding: 12px;
+        font-size: 1.2em;
+        color: #584949;
+        background: linear-gradient(to right, #ff7e5f, #feb47b);
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+      }
+
+      input[type="file"]:hover {
+        background: linear-gradient(to right, #feb47b, #ff7e5f);
+      }
+
+      button {
+        padding: 12px 20px;
+        font-size: 1.2em;
+        color: #3f3c3c;
+        background: linear-gradient(to right, #36d1dc, #5b86e5);
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        margin-top: 15px;
+        transition: background 0.3s ease;
+      }
+
+      button:hover {
+        background: linear-gradient(to right, #5b86e5, #36d1dc);
+      }
+
+      #result-text {
+        margin-top: 25px;
+        font-size: 2em; /* Larger font size */
+        color: #c6fbc9; /* Slightly lighter black */
+        font-weight: bold;
+      }
+
+      #copy-btn {
+        margin-top: 10px;
+        padding: 10px 20px;
+        font-size: 1em;
+        background: linear-gradient(to right, #ff5f6d, #ffc371);
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        color: #584949;
+        transition: background 0.3s ease;
+      }
+
+      #copy-btn:hover {
+        background: linear-gradient(to right, #ffc371, #ff5f6d);
+      }
+    </style>
+</head>
+<body>
+    <h1>Captcha Solver</h1>
+    <p><strong>Upload A Captcha Screenshot Image (Only Text).</strong></p>
+
+    <!-- File upload form -->
+    <form id="upload-form" enctype="multipart/form-data">
+        <input type="file" name="captcha_image" id="captcha-image">
+        <button type="submit">Predict</button>
+    </form>
+
+    <!-- Display the prediction result directly here -->
+    <p id="result-text" style="display: none;"></p>
+    <button id="copy-btn" style="display: none;">Copy Text</button>
+
+    <script>
+        document.getElementById('upload-form').addEventListener('submit', function (e) {
+            e.preventDefault(); // Prevent the default form submission behavior
+
+            const formData = new FormData();
+            const fileInput = document.getElementById('captcha-image');
+            formData.append('captcha_image', fileInput.files[0]);
+
+            // Send the data to the server using fetch
+            fetch('/predict', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.text()) // Expect plain text response
+                .then(data => {
+                    // Update the result text
+                    const resultText = document.getElementById('result-text');
+                    resultText.style.display = 'block';
+                    resultText.textContent = `Predicted Text : ${data}`;
+                    
+                    const copyButton = document.getElementById('copy-btn');
+                    copyButton.style.display = 'block';
+                    copyButton.addEventListener('click', function () {
+                        navigator.clipboard.writeText(data)
+                            .then(() => {
+                                alert('Text copied to clipboard!');
+                            })
+                            .catch(err => {
+                                console.error('Error copying text:', err);
+                            });
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+    </script>
+</body>
+</html>
